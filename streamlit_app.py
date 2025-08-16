@@ -76,7 +76,7 @@ def create_plot(x, y, inside_circle):
     return fig
 
 # メインアプリケーション
-st.title("モンテカルロ法で円周率を求めよう！")
+st.title("モンテカルロ法")
 st.caption("Created by Dit-Lab.(Daiki ITO)")
 st.caption("Supported by Tomoaki ATSUMI")
 
