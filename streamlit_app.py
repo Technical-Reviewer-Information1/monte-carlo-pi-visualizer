@@ -83,32 +83,30 @@ st.caption("Supported by Tomoaki ATSUMI")
 # 設定エリア
 st.header("⚙️ 設定")
 n_samples = st.slider("試行回数を指定してください", 100, 100000, 3000, 100)
-run_simulation = st.button("シミュレーション実行")
 
-if run_simulation:
-    # シミュレーション実行
-    x, y, inside_circle, pi_estimate = monte_carlo_pi(n_samples)
-    
-    # 結果の可視化
-    fig = create_plot(x, y, inside_circle)
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # メトリクス表示
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("全体の点の数 (N)", f"{n_samples:,}")
-    with col2:
-        st.metric("円の内側の点の数 (n)", f"{np.sum(inside_circle):,}")
-    with col3:
-        st.metric("計算された円周率 (π)", f"{pi_estimate:.4f}")
-    
-    # 真の円周率との比較
-    true_pi = np.pi
-    error = abs(pi_estimate - true_pi)
-    error_percentage = (error / true_pi) * 100
-    
-    st.info(f"真の円周率: {true_pi:.6f}")
-    st.info(f"誤差: {error:.6f} ({error_percentage:.2f}%)")
+# シミュレーション実行（スライダーの値に応じて自動実行）
+x, y, inside_circle, pi_estimate = monte_carlo_pi(n_samples)
+
+# 結果の可視化
+fig = create_plot(x, y, inside_circle)
+st.plotly_chart(fig, use_container_width=True)
+
+# メトリクス表示
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("全体の点の数 (N)", f"{n_samples:,}")
+with col2:
+    st.metric("円の内側の点の数 (n)", f"{np.sum(inside_circle):,}")
+with col3:
+    st.metric("計算された円周率 (π)", f"{pi_estimate:.4f}")
+
+# 真の円周率との比較
+true_pi = np.pi
+error = abs(pi_estimate - true_pi)
+error_percentage = (error / true_pi) * 100
+
+st.info(f"真の円周率: {true_pi:.6f}")
+st.info(f"誤差: {error:.6f} ({error_percentage:.2f}%)")
 
 # 原理の解説
 st.header("📚 モンテカルロ法とは？")
