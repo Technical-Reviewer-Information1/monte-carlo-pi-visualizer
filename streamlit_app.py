@@ -4,6 +4,9 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
+st.set_page_config(page_title="シミュレーション④モンテカルロ法", layout="wide")
+
+
 def monte_carlo_pi(n_samples):
     """モンテカルロ法で円周率を推定"""
     x = np.random.uniform(0, 1, n_samples)
