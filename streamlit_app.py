@@ -76,7 +76,7 @@ def create_plot(x, y, inside_circle):
     return fig
 
 # メインアプリケーション
-st.title("モンテカルロ法")
+st.title("シミュレーション④モンテカルロ法（pp.97-98）")
 st.caption("Created by Dit-Lab.(Daiki ITO)")
 st.caption("Supported by Tomoaki ATSUMI")
 
