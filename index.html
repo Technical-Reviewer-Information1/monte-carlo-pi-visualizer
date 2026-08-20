@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>シミュレーション④ モンテカルロ法｜情報Ⅰ共通テスト対策問題集</title>
+<meta name="description" content="でたらめに点を打つだけで円周率が求まります。点の数を増やすほど精度が上がるようすを、自分の目で確かめましょう。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%2315181c%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2218%22 font-family=%22monospace%22 fill=%22%23fff%22 text-anchor=%22middle%22%3E01%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="inner">
+    <span class="eyebrow">第 3 章　モデル化とシミュレーション　3-5</span>
+    <h1>シミュレーション④ モンテカルロ法（pp.97-98）</h1>
+    <p class="lead">でたらめに点を打つだけで円周率が求まります。点の数を増やすほど精度が上がるようすを、自分の目で確かめましょう。</p>
+    <p class="credit">Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="step" id="step1">
+    <h2><span class="no">STEP 1</span>1点ずつ打って確かめる</h2>
+    <p class="desc">1辺1の正方形の中にでたらめに点を打ち、<strong>原点からの距離が1以下かどうか</strong>を調べます。境界線上の点は内側とします。</p>
+
+    <div class="panel">
+      <div class="grid c2">
+        <div id="mcBox"></div>
+        <div>
+          <div class="eqbox" id="lastPoint">まだ点を打っていません</div>
+          <div class="btn-row" style="margin-top:12px">
+            <button class="btn primary" id="add1">1点打つ</button>
+            <button class="btn" id="add10">10点</button>
+            <button class="btn" id="add100">100点</button>
+            <button class="btn" id="add1000">1000点</button>
+            <button class="btn ghost" id="clearPts">全部消す</button>
+          </div>
+          <div class="metrics" style="margin-top:14px">
+            <div class="metric"><div class="k">打った点の数</div><div class="v" id="mAll">0</div></div>
+            <div class="metric"><div class="k">四分円の内側</div><div class="v" id="mIn">0</div></div>
+          </div>
+          <div class="bignum" id="piNow" style="margin-top:14px">—<small>円周率の近似値</small></div>
+          <div class="note" id="mcNote" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <div class="eqbox" style="margin-top:14px">
+        正方形の面積 ＝ 1 × 1 ＝ 1　／　四分円の面積 ＝ π × 1² ÷ 4 ＝ π/4<br>
+        点の数の比 ＝ 面積の比 なので　<strong>π ≒ 4 × (内側の点の数) ÷ (すべての点の数)</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step2">
+    <h2><span class="no">STEP 2</span>点の数を増やすと精度はどうなるか</h2>
+    <p class="desc">点を増やしていったときに、近似値が<strong>どのように 3.14159… に近づくか</strong>を折れ線で見ます。</p>
+    <div class="panel">
+      <div class="btn-row" style="margin-bottom:12px">
+        <button class="btn primary" id="runConv">10000点まで打って記録する</button>
+        <button class="btn ghost" id="clearConv">消す</button>
+      </div>
+      <div id="convChart"></div>
+      <div class="note" id="convNote" style="margin-top:12px">ボタンを押してください。</div>
+      <div class="toolbar" id="convTools"></div>
+    </div>
+  </section>
+
+  <section class="step" id="step3">
+    <h2><span class="no">STEP 3</span>同じ点の数でも結果はばらつく</h2>
+    <p class="desc">確率的モデルなので、同じ条件でも実行のたびに答えが変わります。<strong>点の数を変えて、ばらつきの大きさを比べましょう。</strong></p>
+    <div class="panel">
+      <div class="btn-row">
+        <button class="btn primary" id="runSpread">100点・1000点・10000点で各50回ずつ実行</button>
+      </div>
+      <div id="spreadChart" style="margin-top:14px"></div>
+      <div class="tbl-scroll" style="margin-top:12px"><table class="tbl" id="spreadTable"></table></div>
+      <div class="note" id="spreadNote" hidden style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <section class="step" id="step4">
+    <h2><span class="no">STEP 4</span>面積を求めるのにも使える</h2>
+    <p class="desc">モンテカルロ法は円周率だけのものではありません。<strong>式では求めにくい面積</strong>も同じやり方で近似できます。</p>
+    <div class="panel">
+      <div class="btn-row" style="margin-bottom:12px">
+        <span class="badge">図形</span>
+        <button class="btn sm" data-fig="quarter">四分円（π/4）</button>
+        <button class="btn sm" data-fig="parab">y ＝ x² の下側</button>
+        <button class="btn sm" data-fig="tri">三角形</button>
+        <button class="btn sm" data-fig="wave">y ＝ (sin(5x)+1)/2 の下側</button>
+      </div>
+      <div class="grid c2">
+        <div id="areaBox"></div>
+        <div>
+          <label class="fld" for="areaN">打つ点の数：<span class="mono" id="areaNv">2000</span></label>
+          <input type="range" id="areaN" min="100" max="20000" step="100" value="2000">
+          <div class="metrics" style="margin-top:12px">
+            <div class="metric"><div class="k">推定した面積</div><div class="v" id="aEst">—</div></div>
+            <div class="metric"><div class="k">正しい面積</div><div class="v" id="aTrue">—</div></div>
+            <div class="metric"><div class="k">誤差</div><div class="v" id="aErr">—</div><div class="s">％</div></div>
+          </div>
+          <div class="note" id="areaNote" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step5">
+    <h2><span class="no">STEP 5</span>確認クイズ</h2>
+    <div class="panel">
+      <div class="qhead">
+        <span class="badge" id="qProgress">1 / 1</span>
+        <span class="badge">正解 <span class="score" id="qScore">0</span></span>
+      </div>
+      <div class="card-q"><div class="q-scene" id="qText"></div></div>
+      <div class="choice4" id="qChoices"></div>
+      <div class="note" id="qFb" hidden style="margin-top:12px"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn primary" id="qNext" disabled>次の問題</button>
+        <button class="btn ghost" id="qReset">最初から</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="glossary">
+    <h2><span class="no">用語</span>この節で出てくることば</h2>
+    <div id="glossBox"></div>
+  </section>
+
+  <section class="step">
+    <h2><span class="no">まとめ</span>モンテカルロ法のポイント</h2>
+    <ul style="margin:0;padding-left:1.2em;color:var(--ink-2);font-size:.92rem;line-height:2.05">
+      <li>点の数の比が<strong>面積の比</strong>になることを利用する。</li>
+      <li>π ≒ <span class="mono">4 × 内側の点の数 ÷ 全部の点の数</span>。</li>
+      <li><strong>点を増やすほど精度が上がる</strong>。正方形の大きさを変えても精度は変わらない。</li>
+      <li>ただし精度は点の数の<strong>平方根に比例</strong>してしか上がらない。100倍打っても誤差は10分の1程度。</li>
+      <li>確率的モデルなので、同じ点の数でも実行のたびに結果が変わる。</li>
+      <li>式で求めにくい面積や確率の計算にも広く使われている。</li>
+    </ul>
+  </section>
+
+  <section class="step">
+    <h2><span class="no">活用</span>授業・探究での使い方</h2>
+    <div class="use-note">
+      <h3>授業で</h3>
+      <ul>
+        <li>STEP 1 で1点ずつ打ち、内側か外側かの判定を全体で確認する。</li>
+        <li>STEP 2 で点の数を10→100→1000→10000と増やし、値が3.14に近づくのを見せる。</li>
+        <li>STEP 3 の収束グラフは「試行回数と精度」の関係を示す教材としてそのまま使える。</li>
+      </ul>
+      <h3 style="margin-top:12px">探究で</h3>
+      <ul>
+        <li>点の数と誤差の関係を記録し、グラフにして考察する（誤差は点の数の平方根に反比例する）。</li>
+        <li>同じ点の数で何度も実行し、結果のばらつきを箱ひげ図にまとめる。</li>
+        <li>円以外の図形（三角形・放物線の下側）の面積をモンテカルロ法で求めてみる。</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  情報Ⅰ 共通テスト対策問題集（技術評論社）連動Webアプリ　/　Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI
+</footer>
+
+<script src="js/tools.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/terms.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
