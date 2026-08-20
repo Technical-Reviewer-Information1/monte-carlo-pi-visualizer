@@ -228,6 +228,12 @@
     $('qScore').textContent = qScore; $('qNext').disabled = false;
   }
 
+  /* 本文の問題 */
+  function drawBook() {
+    if (!document.getElementById('bookBox')) return;
+    window.Quiz.choice('bookBox', 'bookNote', [{"k": "ア", "q": "円周率πの近似値をより正確にするにはどうすればよいか。", "ch": ["正方形の1辺の長さを長くする", "正方形の1辺の長さを短くする", "正方形内に生成させる点の数を減らす", "正方形内に生成させる点の数を増やす"], "a": 3, "why": "点の数を増やすほど、面積の比が真の値に近づきます（<strong>大数の法則</strong>）。正方形の大きさは比なので結果に影響しません。"}, {"k": "イ", "q": "3000個の点のうち2355個が四分円内にあったとき、円周率の近似値は。", "ch": ["3.12", "3.13", "3.14", "3.15"], "a": 2, "why": "四分円の面積の比＝π/4 なので、π ≒ 4 × 2355 ÷ 3000 ＝ <strong>3.14</strong> です。"}], "本文の答えは【ア】③　【イ】② です。");
+  }
+
   function init() {
     $('add1').addEventListener('click', () => addPts(1));
     $('add10').addEventListener('click', () => addPts(10));
@@ -243,6 +249,7 @@
     $('qReset').addEventListener('click', startQuiz);
     window.Terms.glossary($('glossBox'), ['モンテカルロ法', '乱数', '確率的モデル', 'シミュレーション', '標準偏差', 'パラメータ']);
     drawMC(); drawArea(); startQuiz();
+    drawBook();
     window.Terms.attach();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
